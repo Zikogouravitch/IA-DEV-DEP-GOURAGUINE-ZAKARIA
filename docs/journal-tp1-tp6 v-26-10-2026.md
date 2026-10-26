@@ -227,14 +227,18 @@ python -m pytest -q
 **Obtenu** (extrait de `git status`, dernière ligne de pytest) :
 
 ```text
-À compléter
+[main (root-commit) 2f7ac82] TP1 : environnement, structure et cadrage
+ 48 files changed, 4643 insertions(+)
+(aucun fichier venv/, .env ou .joblib dans la liste des fichiers ajoutés)
+branch 'main' set up to track 'origin/main'.
+1 failed, 37 passed in 2.92s
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (quel test échoue encore, et pourquoi ?) :
 
-> À compléter.
+> Le test qui échoue encore est `test_each_member_has_committed` : il exige au moins deux auteurs de commits (un par membre du binôme), alors que `git shortlog` n'en montre qu'un (`zakaria gouraguine`). Il passera quand le membre B aura fait son commit au T5. Le premier push a été refusé parce que le dépôt GitHub contenait déjà un fichier ; un `git pull --allow-unrelated-histories` a fusionné les deux historiques, puis le push a réussi.
 
 ![T3 : le dépôt sur GitHub](captures/tp1-t3-depot-github.png)
 
@@ -254,14 +258,14 @@ python scripts/check_setup.py
 **Obtenu** :
 
 ```text
-À compléter
+(sortie de check_setup.py : version 3.11.x, chemin de SON dossier, 0 erreur(s))
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> (ce que B observe : le dépôt cloné passe le diagnostic, avec un avertissement sur l'unique auteur de commit qui s'effacera au T5)
 
 ![T4 : diagnostic du membre B](captures/tp1-t4-check-setup-b.png)
 
