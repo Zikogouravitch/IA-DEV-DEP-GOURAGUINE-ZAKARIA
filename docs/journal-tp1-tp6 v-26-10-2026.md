@@ -848,15 +848,29 @@ python src/train.py
 python -m pytest -q
 ```
 
-**Attendu** : `48 passed`.
+**Attendu** : `45 passed`.
 
 **Obtenu** :
 
 ```text
-À compléter
+ python src/make_demo.py
+290 avis écrits dans data\demo_reviews.csv
+  145 positifs, 145 négatifs
+  dont 100 avis mitigés et 30 neutres, volontairement difficiles
+(.venv) PS C:\Users\SetupGame\Desktop\godhelpme\IA-DEV-DEP-GOURAGUINE-ZAKARIA> python src/train.py
+Source : demo, 290 avis (145 négatifs)
+232 avis d'entraînement, 58 de test
+Vocabulaire : 316 termes
+F1 macro sur le jeu de test : 0.879 (seuil 0.85)
+Modèle : models\sentiment.joblib
+Métriques : models\metrics.json (versionné dans Git, contrairement au modèle)
+(.venv) PS C:\Users\SetupGame\Desktop\godhelpme\IA-DEV-DEP-GOURAGUINE-ZAKARIA> python -m pytest -q
+.............................................                                                                                                                                                                               [100%]
+45 passed in 1.94s
+(.venv) PS C:\Users\SetupGame\Desktop\godhelpme\IA-DEV-DEP-GOURAGUINE-ZAKARIA> 
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 ![TP3 : poste du membre B](captures/tp3-membre-b.png)
 
