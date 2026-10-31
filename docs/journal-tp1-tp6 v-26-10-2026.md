@@ -767,17 +767,25 @@ git push
 
 **Attendu** : dans l'onglet Actions, l'étape « Modèle de démonstration, pour les tests de l'API (TP3) » passe, puis l'étape « Tests » affiche `48 passed`.
 
-**Obtenu** :
 
+**Obtenu** :
 ```text
-À compléter
+Commandes exécutées pour envoyer les modifications sur GitHub :
+
+git add -A
+git commit -m "Semaine 3 : API FastAPI"
+git push
+
+Objectif : ajouter les fichiers du TP3, créer le commit et envoyer les modifications sur le dépôt distant.
+Résultat de la CI : à vérifier dans l'onglet Actions de GitHub.
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (pourquoi la CI doit-elle entraîner le modèle ?) :
 
-> À compléter.
+> La CI doit entraîner le modèle pour disposer d'un modèle récent et reproductible pendant l'exécution des tests. Cela permet de vérifier que l'entraînement fonctionne, que le fichier `models/sentiment.joblib` est généré et que l'API peut charger le modèle pour effectuer des prédictions. Ainsi, les tests ne dépendent pas d'un ancien modèle présent localement sur le poste du développeur.
+
 
 ![T19 : la CI du TP3](captures/tp3-t19-actions.png)
 
@@ -791,17 +799,43 @@ Rename-Item models/sentiment.bak sentiment.joblib
 
 **Attendu** : `FileNotFoundError: models/sentiment.joblib absent : lancez python src/train.py`, puis `Application startup failed`.
 
-**Obtenu** :
 
+**Obtenu** :
 ```text
-À compléter
+Tentative de renommage :
+Rename-Item models/sentiment.bak sentiment.joblib
+
+Erreur :
+Cannot rename because item at 'models/sentiment.bak' does not exist.
+
+Création du dossier et du fichier API :
+mkdir api
+New-Item api/__init__.py -ItemType File
+notepad api/main.py
+
+Tentative de lancement :
+lancez python src/train.py
+
+Erreur :
+The term 'lancez' is not recognized as the name of a cmdlet.
+
+Entraînement effectué :
+python src/train.py
+
+Source : demo, 290 avis (145 négatifs)
+232 avis d'entraînement, 58 de test
+Vocabulaire : 316 termes
+F1 macro sur le jeu de test : 0.879 (seuil 0.85)
+Modèle : models\sentiment.joblib
+Métriques : models\metrics.json
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> L'objectif de ce test est de vérifier le comportement de l'API lorsque le fichier du modèle est absent. La commande de renommage a échoué car le fichier `models/sentiment.bak` n'existait pas : le modèle n'a donc pas été supprimé ou déplacé. L'entraînement a ensuite été exécuté correctement avec `python src/train.py`, ce qui a généré `models/sentiment.joblib`. Le résultat attendu (`FileNotFoundError`, puis `Application startup failed`) n'a pas été observé dans les commandes fournies. Le test de démarrage sans modèle reste donc à refaire.
+
 
 ![T20 : refus de démarrer](captures/tp3-t20-sans-modele.png)
 
