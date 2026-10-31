@@ -4,8 +4,8 @@
 
 | | Membre A | Membre B |
 | --- | --- | --- |
-| Nom | Gouraguine Zakaria | Aadoud Anass |
-| Compte GitHub | Zikogouravitch | anass0031 |
+| Nom | Gouraguine Zakaria | zack |
+| Compte GitHub | Zikogouravitch | zack409 |
 
 **Dépôt** : https://github.com/Zikogouravitch/sentiment-app
 
@@ -79,18 +79,28 @@ git config --global user.name
 ```
 
 **Attendu** : une version 3.11, `Python 3.11.x`, une version de Git, le nom du membre B, différent de celui du membre A.
-
 **Obtenu** :
 
 ```text
-À compléter
+Python installé :
+- Python 3.13 (64-bit)
+- Python 3.11 (64-bit)
+
+Version Python :
+Python 3.11.9
+
+Version Git :
+git version 2.47.1.windows.1
+
+Nom du membre B :
+zack409
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> Le poste du membre B est conforme aux prérequis du TP. Python 3.11.9 et Git 2.47.1.windows.1 sont installés. Le nom Git configuré est `zack409`. L'environnement permet au membre B de participer au développement collaboratif du projet.
 
 ![Poste du membre B](captures/tp0-poste-membre-b.png)
 
