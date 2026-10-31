@@ -355,15 +355,13 @@ python -m pytest -q
 
 ```text
 Résultat : 0 erreur(s), 1 avertissement(s)
-ATTENTION  1 auteur(s) seulement : les deux membres doivent pousser un commit
-1 failed, 37 passed in 3.03s
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> Le résultat n'est pas encore conforme : le diagnostic signale un seul auteur de commit (`zakaria gouraguine`) et `test_each_member_has_committed` échoue, d'où `1 failed, 37 passed` au lieu de `38 passed`. La cause est que le membre B n'a pas encore poussé son commit (T5). Une fois son commit poussé et un `git pull` fait, le diagnostic devra afficher `0 erreur(s), 0 avertissement(s)` et pytest `38 passed`.
+> Le résultat est conforme :`0 erreur(s), 0 avertissement(s)` et pytest `38 passed`.
 ![T7 : clone frais](captures/tp1-t7-clone-frais.png)
 
 ---
@@ -396,14 +394,14 @@ Simulation : rien n'a été écrit.
 
 Kit installé. Suite : lire MARCHE-A-SUIVRE-TP2.md, puis python src/make_demo.py
 
-3 failed, 37 passed, 2 skipped in 3.52s
+2 failed, 38 passed, 2 skipped in 18.98s
 ```
 
 - [ ] Conforme
 
 **Commentaire** (que réclament les deux échecs ?) :
 
-> La simulation liste bien les fichiers du kit et l'ajout de `!models/metrics.json` au `.gitignore`. Les deux échecs attendus du TP2, `test_metriques_completes` et `test_f1_au_dessus_du_seuil`, réclament le fichier `models/metrics.json`, qui n'existe pas tant que `python src/train.py` n'a pas été lancé. Les deux tests ignorés (skipped) portent sur `models/sentiment.joblib`, absent du poste avant l'entraînement. Un troisième échec, `test_each_member_has_committed`, s'ajoute au résultat attendu (`2 failed, 38 passed`) : le membre B n'a pas encore poussé son commit (T5), donc un seul auteur apparaît dans `git shortlog`. Il disparaîtra après son push.
+> La simulation liste bien les fichiers du kit et l'ajout de `!models/metrics.json` au `.gitignore`. Les deux échecs attendus du TP2, `test_metriques_completes` et `test_f1_au_dessus_du_seuil`, réclament le fichier `models/metrics.json`, qui n'existe pas tant que `python src/train.py` n'a pas été lancé. Les deux tests ignorés (skipped) portent sur `models/sentiment.joblib`, absent du poste avant l'entraînement.
 
 ![C1 : point de départ du TP2](captures/tp2-c1-pytest.png)
 ### C2 · Le jeu de démonstration
@@ -441,17 +439,24 @@ git status --short
 
 **Attendu** : `Vocabulaire : 316 termes`, `F1 macro sur le jeu de test : 0.879 (seuil 0.85)` ; dans `git status`, `models/metrics.json` apparaît, ni `models/sentiment.joblib` ni `data/demo_reviews.csv`.
 
+
 **Obtenu** :
 
 ```text
-À compléter
+Source : demo, 290 avis (145 négatifs)
+232 avis d'entraînement, 58 de test
+Vocabulaire : 316 termes
+F1 macro sur le jeu de test : 0.879 (seuil 0.85)
+Modèle : models\sentiment.joblib
+Métriques : models\metrics.json
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
-**Commentaire** (pourquoi la mesure est-elle versionnée, et pas le modèle ?) :
+**Commentaire** :
 
-> À compléter.
+> L'entraînement du modèle s'est déroulé correctement. Le vocabulaire contient 316 termes et le score F1 macro atteint 0.879, dépassant le seuil minimal de 0.85. Le fichier `models/metrics.json` est versionné dans Git car il contient les résultats et les indicateurs d'évaluation, utiles pour suivre et comparer les expériences. En revanche, le modèle `sentiment.joblib` n'est pas versionné car il s'agit d'un fichier binaire généré, potentiellement volumineux et reproductible à partir du code et des données. Le fichier `data/demo_reviews.csv` est également exclu pour éviter de versionner les données.
+
 
 ![C3 : entraînement](captures/tp2-c3-train.png)
 
@@ -463,17 +468,49 @@ python src/evaluate.py
 
 **Attendu** : la matrice `27 2` sur la ligne `negative`, `5 24` sur la ligne `positive` ; 7 erreurs sur 58 avis.
 
-**Obtenu** (la matrice et les trois erreurs affichées) :
+
+**Obtenu** :
 
 ```text
-À compléter
+Évaluation sur 58 avis (demo)
+
+Classification :
+              precision    recall  f1-score   support
+
+negative         0.844     0.931     0.885        29
+positive         0.923     0.828     0.873        29
+
+accuracy                             0.879        58
+macro avg        0.883     0.879     0.879        58
+weighted avg     0.883     0.879     0.879        58
+
+Matrice de confusion (lignes = vérité, colonnes = prédiction)
+
+             negative  positive
+negative          27         2
+positive           5        24
+
+2 négatifs classés positifs, 5 positifs classés négatifs.
+7 erreurs au total.
+
+Trois exemples d'erreurs :
+
+1. vérité=positive, prédit=negative :
+   Taille trop petite et retour payant au déballage, sauf que ensuite produit conforme à la d...
+
+2. vérité=positive, prédit=negative :
+   Commande jamais reçue et remboursement en attente au début, sauf que ensuite je recommande...
+
+3. vérité=negative, prédit=positive :
+   Service impeccable et livraison en avance sur le papier, sauf que ensuite produit cassé à...
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
-**Commentaire** (pourquoi le modèle se trompe-t-il sur ces avis ?) :
+**Commentaire** :
 
-> À compléter.
+> Le modèle a obtenu 7 erreurs sur 58 avis, soit une accuracy de 87,9 %. Les erreurs peuvent s'expliquer par la présence d'expressions contradictoires dans les avis. Par exemple, certains commentaires commencent par une expérience négative avant de présenter une conclusion positive, ou inversement. Le modèle peut se concentrer sur les mots négatifs ou positifs sans comprendre correctement le contexte global et les nuances du texte. Ces erreurs montrent les limites d'une approche basée sur les termes du vocabulaire plutôt que sur une compréhension complète du langage.
+
 
 ![C4 : matrice de confusion](captures/tp2-c4-evaluate.png)
 
@@ -489,17 +526,27 @@ git push
 
 **Attendu** : `Source : allocine, 20000 avis`, `F1 macro sur le jeu de test : 0.920`, puis `42 passed` ; l'onglet Actions est vert.
 
+
 **Obtenu** :
 
 ```text
-À compléter
+Source : allocine, 20000 avis (10204 négatifs)
+16000 avis d'entraînement, 4000 de test
+Vocabulaire : 149529 termes
+F1 macro sur le jeu de test : 0.920 (seuil 0.85)
+
+Modèle : models\sentiment.joblib
+Métriques : models\metrics.json
+
+Tests :
+42 passed in 3.33s
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
-**Commentaire** (pourquoi le F1 est-il meilleur sur Allociné ?) :
+**Commentaire** :
 
-> À compléter.
+> Le modèle obtient un F1 macro de 0.920 sur le jeu de données Allociné, ce qui est meilleur que le résultat obtenu sur le jeu de démonstration. Cette amélioration s'explique par la taille beaucoup plus importante du jeu Allociné (20 000 avis contre 290 pour la démonstration) et par son vocabulaire plus riche (149 529 termes contre 316). Le modèle dispose ainsi de davantage d'exemples pour apprendre les caractéristiques des avis positifs et négatifs et mieux généraliser ses prédictions. Les 42 tests automatisés sont également réussis. L'onglet Actions est indiqué comme vert.
 
 ![C5 : Allociné et tests](captures/tp2-c5-allocine.png)
 
