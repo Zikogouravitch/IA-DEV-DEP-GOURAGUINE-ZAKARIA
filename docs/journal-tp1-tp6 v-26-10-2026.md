@@ -595,21 +595,45 @@ python src/train.py
 python -m pytest -q
 ```
 
-**Attendu** : la simulation liste les fichiers copiés et les compléments de `pytest.ini` et de `ci.yml` ; pytest affiche `48 passed`.
+**Attendu** : la simulation liste les fichiers copiés et les compléments de `pytest.ini` et de `ci.yml` ; pytest affiche `45 passed`.
+
+
+**Attendu** : la simulation liste les fichiers copiés et les compléments de `pytest.ini` et de `ci.yml` ; pytest affiche `45 passed`.
 
 **Obtenu** :
-
 ```text
-À compléter
+La simulation du kit TP3 liste les fichiers à copier :
+- ui/app.py
+- ui/helpers.py
+- tests/test_ui.py
+- notebooks/TP3-colab-streamlit.ipynb
+- TP3-ENONCE.md
+- MARCHE-A-SUIVRE-TP3.md
+- docs/compte-rendu-TEMPLATE.md
+- ENONCE-COMPTE-RENDU.md
+
+Simulation : rien n'a été écrit.
+
+Installation réelle :
+Kit installé. Suite : streamlit run ui/app.py
+
+Réentraînement :
+Source : demo, 290 avis (145 négatifs)
+232 avis d'entraînement, 58 de test
+Vocabulaire : 316 termes
+F1 macro sur le jeu de test : 0.879 (seuil 0.85)
+
+Tests :
+45 passed in 3.87s
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (pourquoi réentraîner sur le jeu de démonstration avant les tests ?) :
 
-> À compléter.
+> Le réentraînement sur le jeu de démonstration permet de disposer d'un modèle et de métriques reproductibles, construits à partir d'un jeu de données connu et stable. Cela garantit que les tests utilisent un modèle préparé dans les mêmes conditions à chaque exécution, sans dépendre d'un entraînement précédent ou de données externes. Les 45 tests sont réussis. Toutefois, le journal fourni ne permet pas de confirmer les compléments de `pytest.ini` et de `ci.yml`.
 
-![T14 : 48 tests verts](captures/tp3-t14-pytest.png)
+![T14 : 45 tests verts](captures/tp3-t14-pytest.png)
 
 ### T15 · `/health`
 
@@ -621,17 +645,26 @@ Puis, dans `http://localhost:8000/docs` : `GET /health`, « Try it out », « Ex
 
 **Attendu** : `200`, `"status": "OK"`, `"model": "tfidf-logreg (TP2, models/sentiment.joblib)"`.
 
-**Obtenu** :
 
+**Attendu** : `200`, `"status": "OK"`, `"model": "tfidf-logreg (TP2, models/sentiment.joblib)"`.
+
+**Obtenu** :
 ```text
-À compléter
+Commande : uvicorn api.main:app --reload
+
+INFO: Uvicorn running on http://127.0.0.1:8000
+INFO: Started reloader process [21352] using WatchFiles
+
+Le serveur API démarre correctement.
+Le code HTTP et les informations de santé de l'API restent à vérifier.
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> Le démarrage du serveur Uvicorn permet de rendre l'API accessible localement pour effectuer les tests. Il faut ensuite vérifier la route `/health` afin de confirmer que l'API répond avec le code HTTP `200`, que son statut est `OK` et qu'elle utilise bien le modèle entraîné au TP2 (`models/sentiment.joblib`).
+
 
 ![T15 : health dans /docs](captures/tp3-t15-health.png)
 
@@ -641,17 +674,24 @@ Puis, dans `http://localhost:8000/docs` : `GET /health`, « Try it out », « Ex
 
 **Attendu** : `200`, `"label": "POSITIVE"`, `"score": 0.777`.
 
-**Obtenu** :
 
+**Obtenu** :
 ```text
-À compléter
+Avis à analyser :
+Livraison rapide, produit conforme, très satisfait
+
+Résultat :
+Avis positif
+
+Confiance :
+78 %
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> L'application analyse le texte saisi et prédit un sentiment positif. Le résultat indique une confiance de 78 %, ce qui signifie que le modèle estime que cet avis est positif avec un niveau de confiance de 78 %. L'exemple montre que l'interface permet de saisir un avis et d'obtenir automatiquement une prédiction.
 
 ![T16 : avis positif](captures/tp3-t16-positif.png)
 
@@ -667,17 +707,25 @@ python -c "import httpx; r = httpx.post('http://127.0.0.1:8000/predict', json={'
 
 **Attendu** : `200`, `"label": "NEGATIVE"`, `"score": 0.7465`.
 
-**Obtenu** :
 
-```text
-À compléter
+**Obtenu** :
+```text id="neg742"
+Avis à analyser :
+Produit cassé et service injoignable, à fuir
+
+Résultat :
+Avis négatif : à traiter en priorité
+
+Confiance :
+75 %
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> L'application identifie correctement un avis négatif et lui attribue une confiance de 75 %. Le message indique que le client est insatisfait en raison d'un produit cassé et d'un service client injoignable. L'application signale donc cet avis comme prioritaire à traiter.
+
 
 ![T17 : avis négatif](captures/tp3-t17-negatif.png)
 
@@ -687,17 +735,25 @@ python -c "import httpx; r = httpx.post('http://127.0.0.1:8000/predict', json={'
 
 **Attendu** : `422` dans les trois cas.
 
+
 **Obtenu** (le code et le `detail` de chaque réponse) :
 
 ```text
-À compléter
+Cas 1 : Avis vide
+Code HTTP : 422
+detail : Saisissez un avis.
+
+Cas 2 : Fichier CSV
+Code HTTP : À vérifier
+detail : À vérifier
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (que dit `detail`, et pourquoi 422 plutôt que 500 ?) :
 
-> À compléter.
+> Le champ `detail` explique pourquoi la requête est refusée : ici, aucun avis n'a été saisi. Le code HTTP 422 indique que la requête a été comprise par le serveur, mais que les données fournies ne respectent pas les conditions de validation. Le code 500 signalerait plutôt une erreur interne du serveur. 
+
 
 ![T18 : un refus 422](captures/tp3-t18-refus.png)
 
