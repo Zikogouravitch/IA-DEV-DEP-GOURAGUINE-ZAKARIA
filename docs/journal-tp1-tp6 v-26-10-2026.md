@@ -564,11 +564,19 @@ python -m pytest -q
 **Obtenu** :
 
 ```text
-À compléter
+Source : allocine, 20000 avis (10204 négatifs)
+16000 avis d'entraînement, 4000 de test
+Vocabulaire : 149529 termes
+F1 macro sur le jeu de test : 0.920 (seuil 0.85)
+
+Modèle : models\sentiment.joblib
+Métriques : models\metrics.json
+
+Tests :
+42 passed in 3.33s
 ```
 
-- [ ] Conforme
-
+- [x] Conforme
 ![TP2 : poste du membre B](captures/tp2-membre-b.png)
 
 > Les résultats attendus de chaque contrôle, les sept erreurs du jeu de démonstration, un exemple de `docs/semaine2.md` et la fin du TP2 (push, CI, part du membre B) sont détaillés dans l'**annexe B**, à la fin de ce journal. Le script d'entraînement, `src/train.py`, est expliqué pas à pas dans l'**annexe C**.
