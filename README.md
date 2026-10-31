@@ -72,4 +72,4 @@ sentiment-app/
 | Rôle | Nom | Identifiant GitHub | Travail de la semaine 1 |
 | --- | --- | --- | --- |
 | Membre A | Gouraguine Zakaria | Zikogouravitch | |
-| Membre B | Anass Aadoud | anass0031 | |
+| Membre B | zack | zack409 | |
