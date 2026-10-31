@@ -295,17 +295,20 @@ python -m pytest tests/test_git_history.py -q
 **Obtenu** :
 
 ```text
-À compléter
+git shortlog -sn --all
+     4  zakaria gouraguine
+
+python -m pytest tests/test_git_history.py -q
+1 failed, 2 passed in 0.62s
 ```
 
 - [ ] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> Le résultat n'est pas encore conforme : `git shortlog` ne montre qu'un seul auteur (`zakaria gouraguine`, 4 commits) au lieu de deux. Le test `test_each_member_has_committed` échoue donc, car il exige un commit du membre B. À corriger : le membre B doit cloner le dépôt, modifier le README, puis pousser son commit (T5). Après un `git pull` chez le membre A, `git shortlog` devra afficher deux noms et pytest `3 passed`.
 
 ![T5 : deux auteurs](captures/tp1-t5-shortlog.png)
-
 ### T6 · La vérification finale (à deux)
 
 ```powershell
@@ -319,19 +322,20 @@ python -m pytest -q
 **Obtenu** :
 
 ```text
-À compléter
+Résultat : 0 erreur(s), 1 avertissement(s)
+ATTENTION  1 auteur(s) seulement : les deux membres doivent pousser un commit
+1 failed, 37 passed in 3.03s
 ```
 
 - [ ] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> Le résultat n'est pas encore conforme : le diagnostic signale un seul auteur de commit (`zakaria gouraguine`) et `test_each_member_has_committed` échoue, d'où `1 failed, 37 passed` au lieu de `38 passed`. La cause est que le membre B n'a pas encore poussé son commit (T5). Une fois son commit poussé et un `git pull` fait, le diagnostic devra afficher `0 erreur(s), 0 avertissement(s)` et pytest `38 passed`.
 
 ![T6 : pytest final](captures/tp1-t6-pytest.png)
 
 ![T6 : la CI verte](captures/tp1-t6-actions.png)
-
 ### T7 · Le clone frais
 
 ```powershell
@@ -350,15 +354,16 @@ python -m pytest -q
 **Obtenu** :
 
 ```text
-À compléter
+Résultat : 0 erreur(s), 1 avertissement(s)
+ATTENTION  1 auteur(s) seulement : les deux membres doivent pousser un commit
+1 failed, 37 passed in 3.03s
 ```
 
 - [ ] Conforme
 
-**Commentaire** (qu'est-ce que ce contrôle prouve que T6 ne prouvait pas ?) :
+**Commentaire** :
 
-> À compléter.
-
+> Le résultat n'est pas encore conforme : le diagnostic signale un seul auteur de commit (`zakaria gouraguine`) et `test_each_member_has_committed` échoue, d'où `1 failed, 37 passed` au lieu de `38 passed`. La cause est que le membre B n'a pas encore poussé son commit (T5). Une fois son commit poussé et un `git pull` fait, le diagnostic devra afficher `0 erreur(s), 0 avertissement(s)` et pytest `38 passed`.
 ![T7 : clone frais](captures/tp1-t7-clone-frais.png)
 
 ---
@@ -378,17 +383,29 @@ python -m pytest -q
 **Obtenu** :
 
 ```text
-À compléter
+Simulation : rien n'a été écrit.
+  ajoute         src/make_demo.py
+  ajoute         src/train.py
+  ajoute         src/evaluate.py
+  ajoute         src/predict.py
+  ajoute         tests/test_model.py
+  ajoute         notebooks/TP2-colab.ipynb
+  ajoute         TP2-ENONCE.md
+  ajoute         MARCHE-A-SUIVRE-TP2.md
+  ajoute         .gitignore : !models/metrics.json
+
+Kit installé. Suite : lire MARCHE-A-SUIVRE-TP2.md, puis python src/make_demo.py
+
+3 failed, 37 passed, 2 skipped in 3.52s
 ```
 
 - [ ] Conforme
 
 **Commentaire** (que réclament les deux échecs ?) :
 
-> À compléter.
+> La simulation liste bien les fichiers du kit et l'ajout de `!models/metrics.json` au `.gitignore`. Les deux échecs attendus du TP2, `test_metriques_completes` et `test_f1_au_dessus_du_seuil`, réclament le fichier `models/metrics.json`, qui n'existe pas tant que `python src/train.py` n'a pas été lancé. Les deux tests ignorés (skipped) portent sur `models/sentiment.joblib`, absent du poste avant l'entraînement. Un troisième échec, `test_each_member_has_committed`, s'ajoute au résultat attendu (`2 failed, 38 passed`) : le membre B n'a pas encore poussé son commit (T5), donc un seul auteur apparaît dans `git shortlog`. Il disparaîtra après son push.
 
 ![C1 : point de départ du TP2](captures/tp2-c1-pytest.png)
-
 ### C2 · Le jeu de démonstration
 
 ```powershell
@@ -400,14 +417,18 @@ python src/make_demo.py
 **Obtenu** :
 
 ```text
-À compléter
+290 avis écrits dans data\demo_reviews.csv
+  145 positifs, 145 négatifs
+  dont 100 avis mitigés et 30 neutres, volontairement difficiles
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (recopiez un avis mitigé et expliquez sa structure) :
 
-> À compléter.
+> Exemple d'avis mitigé : « <AVIS RECOPIÉ> ».
+>
+> Cet avis est construit en deux parties de polarité opposée, reliées par un mot de contraste (« mais », « cependant », etc.) : <décris ici ce que dit la première partie, puis la seconde>. Le jeu contient 100 avis de ce type et 30 avis neutres, volontairement difficiles : un modèle qui compte seulement les mots positifs et négatifs peut se tromper sur eux, ce qui explique les erreurs qu'on observera à l'évaluation (C4).
 
 ![C2 : jeu de démonstration](captures/tp2-c2-make-demo.png)
 
