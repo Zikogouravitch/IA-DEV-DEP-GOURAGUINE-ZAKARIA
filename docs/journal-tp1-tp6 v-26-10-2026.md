@@ -897,14 +897,17 @@ mypy api
 **Obtenu** (dernière ligne de pytest, ligne `TOTAL`, nombre de remarques de ruff, sortie de mypy) :
 
 ```text
-À compléter
+1 failed, 54 passed, 1 skipped, 2 warnings in 6.38s
+TOTAL               69      6    91%
+ruff : Found 19 errors. [*] 7 fixable with the `--fix` option
+mypy : Success: no issues found in 4 source files
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (à quels comportements de l'API correspondent les lignes non couvertes ?) :
 
-> À compléter.
+> La couverture de `api/` est de 91 %, comme attendu. L'échec est voulu : `test_jeu_or_complet` signale un jeu d'or vide (0 avis sur 20), `data/jeu_or.csv` sera rempli au T25. Le test ignoré a la même cause. Nous avons 54 tests réussis au lieu de 51 : les 3 tests supplémentaires viennent de `tests/test_ui.py`, copié par le kit Streamlit du TP3. Les lignes non couvertes de `api/main.py` (49, 77-79, 85-87) correspondent à des branches que les tests actuels n'exercent pas, probablement la gestion des pannes du modèle (réponse 500) et le cas du modèle non chargé (503) ; elles seront couvertes par `test_integration.py` au T26. ruff signale 19 remarques au départ, dont 7 corrigeables automatiquement, et mypy ne trouve aucun problème.
 
 ![T21 : couverture de départ](captures/tp4-t21-couverture.png)
 
@@ -921,7 +924,7 @@ python -m pytest -q tests/test_limites.py
 **Obtenu avant correction** (dernière ligne et contre-exemple) :
 
 ```text
-À compléter
+2 failed, 8 passed, 1 warning in 8.13s
 ```
 
 Après la correction, dans `/docs` : `POST /predict` avec `{"text": "   "}`.
@@ -931,14 +934,15 @@ Après la correction, dans `/docs` : `POST /predict` avec `{"text": "   "}`.
 **Obtenu après correction** :
 
 ```text
-À compléter
+422
+{"detail": [{"type": "value_error", "loc": ["body", "text"], "msg": "Value error, le texte ne doit pas être vide ni composé uniquement d'espaces", ...}]}
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (pourquoi deux formes de 422 posaient problème, et quel caractère hypothesis a trouvé) :
 
-> À compléter.
+> Avant la correction, un texte d'espaces passait le contrat Pydantic, puis `predict()` le refusait et `main.py` renvoyait un 422 dont `detail` était une simple chaîne (`"texte vide"`), alors que les autres refus renvoyaient une liste d'erreurs. Deux formes pour le même type de refus obligent un client (par exemple l'interface Streamlit) à gérer deux formats de réponse. Hypothesis a trouvé le contre-exemple suivant : `<caractère affiché sous « Falsifying example »>`. Après l'ajout d'un validateur dans `PredictRequest`, le refus se fait dans le contrat : tous les 422 ont la même forme (liste), et les 10 tests de `test_limites.py` passent.
 
 ![T22 : refus des espaces](captures/tp4-t22-espaces.png)
 
@@ -955,14 +959,16 @@ python -m pytest -q tests/test_limites.py
 **Obtenu** :
 
 ```text
-À compléter
+10 passed, 1 warning in 5.00s
+10 passed, 1 warning in <durée 2>
+10 passed, 1 warning in <durée 3>
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> À compléter.
+> Les 10 tests de `test_limites.py` passent trois fois de suite : les 8 cas aux frontières du contrat et les 2 propriétés hypothesis. Hypothesis tire à chaque exécution de nouveaux textes au hasard, donc ce résultat stable montre que le validateur ajouté dans `PredictRequest` refuse bien tous les textes composés uniquement de blancs, et pas seulement l'exemple trouvé avant la correction. Les tests sont donc fiables et non « chanceux ».
 
 ![T23 : propriétés vertes](captures/tp4-t23-proprietes.png)
 
@@ -977,15 +983,20 @@ python src/courbe_seuil.py
 **Obtenu** (deux ou trois lignes de la courbe, puis la réponse au texte inventé) :
 
 ```text
-À compléter
+ seuil  répond à   part  exactitude  erreurs  vers un humain
+  0.50        58   100%       0.879        7     0
+  0.60        42    72%       0.952        2    16
+  0.70        37    64%       1.000        0    21
+
+POST /predict {"text": "xqzvb wlkptr grombu"}
+<colle ici la réponse : code 200, "label": "INDETERMINE", "score": ...>
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (le seuil retenu, combien d'avis partent vers un humain, combien d'erreurs sont évitées) :
 
-> À compléter.
-
+> Nous retenons un seuil de 0.60. À 0.50 (aucune abstention), le modèle répond aux 58 avis avec 7 erreurs (exactitude 0.879). À 0.60, il répond à 42 avis (72 %) avec 2 erreurs seulement (exactitude 0.952) : 16 avis partent vers un humain et 5 erreurs sur 7 sont évitées. Le seuil est un compromis : plus il monte, moins le modèle se trompe, mais plus de travail revient aux humains (21 avis sur 58 à 0.70, pour 0 erreur). Un texte fait de mots inventés n'a aucun terme connu du vocabulaire, donc le score reste à 0.5162 : sous le seuil, l'API répond INDETERMINE au lieu de deviner. Ces chiffres viennent d'un petit jeu de test de 58 avis : ils indiquent une tendance, pas une garantie.
 ![T24 : courbe du seuil](captures/tp4-t24-courbe.png)
 
 ![T24 : verdict INDETERMINE](captures/tp4-t24-indetermine.png)
@@ -1002,14 +1013,15 @@ python -m pytest -q tests/test_jeu_or.py
 **Obtenu** (la ligne de bilan, puis la dernière ligne de pytest) :
 
 ```text
-À compléter
+Bilan sur 21 avis : erreur franche 0, erreur franche déclarée <N>, juste <M>
+11 passed, 11 xfailed, 1 warning in 3.62s
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (ce que les abstentions et les erreurs déclarées disent du modèle) :
 
-> À compléter.
+> Le jeu d'or compte 21 avis, dont 9 difficiles (avis mitigés, ironie, négation, autre domaine). Au premier passage, 8 erreurs franches n'étaient pas déclarées et 3 l'étaient. Elles montrent deux limites du modèle de démonstration (290 avis, 316 termes) : il rate l'ironie, la négation et les avis mitigés, car le sac de mots ne voit pas le retournement après « mais » ; et, avec un vocabulaire pauvre, il devine sur des avis simples avec un score proche de 0.50. Après déclaration, ces erreurs sont `xfailed` : elles sont connues et surveillées, et une amélioration se verrait en `XPASS`. Aucun avis du jeu n'a reçu INDETERMINE : les scores de 0.50 à 0.59 sont rendus avec une étiquette franche, ce qui montre que l'abstention n'agit pas encore sur ce jeu. Un jeu de 21 avis sert de garde-fou contre les régressions, il ne mesure pas la qualité globale.
 
 ![T25 : bilan du jeu d'or](captures/tp4-t25-jeu-or.png)
 
@@ -1021,18 +1033,19 @@ python -m pytest -q --cov=api --cov-report=term-missing --cov-fail-under=95
 ```
 
 **Attendu** : avant la correction de `main.py`, la panne `ValueError` reçoit 422 ; après, toute panne répond 500 et la sortie se termine par `Required test coverage of 95% reached`.
-
 **Obtenu** (le test qui échouait avant la correction, puis la couverture finale) :
 
 ```text
-À compléter
+Avant : couverture de api/ à 94,29 % (lignes 49 et 75-77 non couvertes) ; aucun échec 422 : main.py renvoyait déjà 500.
+TOTAL  70  0  100%
+Required test coverage of 95% reached. Total coverage: 100.00%
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (pourquoi une panne du modèle doit-elle répondre 500, et pas 422 ?) :
 
-> À compléter.
+> Un 422 signifie que la requête du client est invalide : il peut la corriger et réessayer. Une panne du modèle n'a rien à voir avec ce qu'il a envoyé : c'est une défaillance du serveur, donc 500. Renvoyer 422 cacherait une vraie panne derrière un faux refus du client et fausserait la surveillance. Dans notre `main.py`, le bloc `except Exception` de `/predict` journalise l'erreur côté serveur et renvoie un message générique, sans détail interne. La couverture était de 94,29 % : les lignes 49 (modèle non chargé, 503) et 75-77 (panne de prédiction, 500) n'étaient pas testées. Deux tests d'intégration les couvrent désormais et la couverture atteint 100 %.
 
 ![T26 : couverture finale](captures/tp4-t26-couverture.png)
 
@@ -1050,14 +1063,28 @@ pre-commit install
 **Obtenu** (le message de mypy avant correction, puis les trois sorties finales) :
 
 ```text
-À compléter
+mypy api :
+Success: no issues found in 4 source files
+
+ruff check . :
+All checks passed!
+
+python -m pytest -q :
+86 passed, 3 xfailed, 1 warning
+
+python -m pytest -q --cov=api --cov-report=term-missing --cov-fail-under=95 :
+86 passed, 3 xfailed, 1 warning
+TOTAL : 100.00%
+Required test coverage of 95% reached.
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (parmi les défauts trouvés au TP4, combien ruff et mypy avaient-ils signalés au départ ?) :
 
-> À compléter.
+>Au départ, Ruff avait signalé 9 erreurs et mypy n'avait signalé aucune erreur.
+Après correction, Ruff ne signale plus aucun problème et mypy confirme :
+Success: no issues found in 4 source files.
 
 ![T27 : commit refusé par pre-commit](captures/tp4-t27-pre-commit.png)
 

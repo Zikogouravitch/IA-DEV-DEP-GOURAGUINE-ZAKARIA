@@ -1,0 +1,22 @@
+text,attendu,difficulte,erreur_connue
+"Commande reçue rapidement, emballage propre et produit conforme",POSITIVE,,
+Le produit fonctionne parfaitement depuis trois semaines,POSITIVE,,
+Livraison en retard de deux jours mais produit de bonne qualité,POSITIVE,avis mitigé,
+"Je ne suis pas mécontent de cet achat, il fait le travail",POSITIVE,négation,
+"Qualité médiocre, le produit s'est cassé dès la première utilisation",NEGATIVE,,
+J'ai payé cher pour recevoir un article de mauvaise qualité,NEGATIVE,,
+Le colis est arrivé ouvert et il manquait un accessoire,NEGATIVE,,
+"Colis écrasé, merci à la livraison pour ce soin remarquable",NEGATIVE,ironie,
+Le casque est confortable mais la batterie ne tient pas une heure,NEGATIVE,avis mitigé,le mot positif confortable l'emporte : le sac de mots ne voit pas le retournement après mais
+"Super, encore une livraison avec une semaine de retard",NEGATIVE,ironie,
+"Très bon rapport qualité-prix, je recommande cet achat",POSITIVE,,
+Le service client a résolu mon problème en quelques minutes,POSITIVE,,
+Le vendeur a ignoré mes messages pendant plusieurs jours,NEGATIVE,,le modèle ne connaît pas le mot ignoré et décide sur les autres mots : POSITIVE à 0.65
+Je ne recommande absolument pas ce produit,NEGATIVE,négation,le sac de mots compte recommande comme positif et ne voit pas la négation
+Le restaurant est agréable mais le téléphone acheté ne fonctionne pas,NEGATIVE,autre domaine,
+"Le produit est correct sans être exceptionnel, je suis satisfait",POSITIVE,avis mitigé,
+Le tissu est doux et les finitions sont vraiment soignées,POSITIVE,,
+Le prix est raisonnable et la livraison a été rapide,POSITIVE,,
+Le logiciel est facile à installer mais il plante régulièrement,NEGATIVE,avis mitigé,
+Le support technique m'a aidé à configurer mon ordinateur,POSITIVE,autre domaine,
+Le produit est arrivé cassé et le vendeur ne répond pas,NEGATIVE,,
