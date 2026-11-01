@@ -1105,10 +1105,10 @@ python -m pytest -q
 **Obtenu** :
 
 ```text
-À compléter
+86 passed, 3 xfailed, 1 warning in 6.86s
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 ![TP4 : poste du membre B](captures/tp4-membre-b.png)
 
