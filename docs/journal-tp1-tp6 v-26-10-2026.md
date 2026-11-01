@@ -1129,17 +1129,25 @@ python -m pytest -q
 
 **Attendu** : la simulation liste `ui/`, les deux fichiers de tests, `data/avis_exemple.csv` et `docs/semaine5.md`, puis les compléments du `.gitignore` et de la CI ; pytest n'affiche aucun `failed`, avec douze tests de plus qu'à la fin du TP4.
 
+**Attendu** : la simulation liste `ui/`, les deux fichiers de tests, `data/avis_exemple.csv` et `docs/semaine5.md`, puis les compléments du `.gitignore` et de la CI ; pytest n'affiche aucun `failed`, avec douze tests de plus qu'à la fin du TP4.
+
 **Obtenu** :
 
 ```text
-À compléter
+Simulation : rien n'a été écrit (OK).
+Kit installé ; ui/app.py déjà présent, donc conservé (non écrasé).
+Entraînement : F1 macro 0.879 (seuil 0.85), 290 avis, 316 termes.
+Premier pytest : 5 failed, 93 passed, 3 xfailed
+  (tests/test_interface.py : l'ancienne page ne correspondait pas aux tests du kit)
+Correction : sauvegarde de l'ancienne page (ui/app_ancien.py), puis copie de
+ui/app.py du kit avec Copy-Item -Force.
+Second pytest : 98 passed, 3 xfailed, 0 failed
 ```
 
-- [ ] Conforme
+- [x] Conforme (après remplacement de ui/app.py par la version du kit)
 
 **Commentaire** (que vérifient les tests du client, et ceux de la page ?) :
-
-> À compléter.
+Les tests du client (test_client.py) vérifient la logique d'appel à l'API : refus des textes vides, faits d'espaces ou de plus de 2000 caractères, et gestion d'une API injoignable. Les tests de la page (test_interface.py, via Streamlit AppTest) vérifient ce que voit l'utilisateur : message « API prête », libellés « Avis positif » / « Je ne sais pas », avertissement sur texte refusé, erreur si l'API est injoignable. Le premier passage a échoué parce que le kit ne remplace pas un ui/app.py existant : la page testée était l'ancienne. Les 3 xfail sont des limites connues du modèle sac de mots (négation, mot inconnu, retournement « mais »), pas des régressions.
 
 ![T28 : tests du TP5](captures/tp5-t28-pytest.png)
 
