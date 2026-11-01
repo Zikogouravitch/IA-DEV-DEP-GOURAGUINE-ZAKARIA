@@ -1164,19 +1164,21 @@ streamlit run ui/app.py
 ```
 
 **Attendu** : la page s'ouvre sur `http://localhost:8501` et affiche `API prête : tfidf-logreg (TP2, models/sentiment.joblib)`.
+**Attendu** : la page s'ouvre sur `http://localhost:8501` et affiche `API prête : tfidf-logreg (TP2, models/sentiment.joblib)`.
 
 **Obtenu** :
 
 ```text
-À compléter
+API lancée avec uvicorn api.main:app --reload (terminal 1).
+Page lancée avec streamlit run ui/app.py (terminal 2), ouverte sur http://localhost:8501.
+En haut de la page : « API prête : tfidf-logreg (TP2, models/sentiment.joblib) ».
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** :
 
-> À compléter.
-
+> Le message « API prête » vient de `client.sante()`, qui appelle `GET /health` sur l'API et affiche le nom du modèle renvoyé. La page ne lit donc pas le fichier `.joblib` : elle apprend quel modèle est chargé en interrogeant l'API. Sans l'API lancée, ce même emplacement afficherait « API injoignable : lancez d'abord uvicorn api.main:app ».
 ![T29 : la page ouverte](captures/tp5-t29-page.png)
 
 ### T30 · Les verdicts
@@ -1188,14 +1190,17 @@ Analysez « Livraison rapide, produit conforme, très satisfait », puis « Prod
 **Obtenu** :
 
 ```text
-À compléter
+Avis 1 : « Livraison rapide, produit conforme, très satisfait »
+  -> Avis positif, 78 %
+Avis 2 : « Produit cassé et service injoignable, à fuir »
+  -> Avis négatif, 75 %
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (d'où viennent ces pourcentages ?) :
 
-> À compléter.
+> Le pourcentage est le `score` renvoyé par l'API dans la réponse de `POST /predict` : c'est la probabilité que le modèle TF-IDF + régression logistique (TP2) attribue à la classe gagnante. La page ne calcule rien : `client.predire()` récupère `label` et `score`, et `app.py` les affiche avec `st.metric(client.VERDICTS[label], f"{score:.0%}")`. Ces scores restent modérés (78 %, 75 %) parce que le jeu d'entraînement est petit (290 avis, 316 termes) : le modèle penche nettement d'un côté sans être très sûr de lui. Un score de 78 % n'est pas une garantie : ce n'est pas la part de bonnes réponses du modèle, mais sa confiance sur cet avis précis.
 
 ![T30 : avis positif](captures/tp5-t30-positif.png)
 
@@ -1210,14 +1215,26 @@ Analysez « xqzvb wlkptr grombu ».
 **Obtenu** :
 
 ```text
-À compléter
+Un avis
+
+Un fichier d'avis
+
+Avis client
+
+xqzvb wlkptr grombu
+
+Je ne sais pas : à faire vérifier par un humain
+
+52 %
+
+La confiance est sous le seuil d'abstention : un humain doit trancher.
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (pourquoi cet affichage vaut-il mieux qu'un verdict forcé ?) :
 
-> À compléter.
+> Cet affichage est préférable à un verdict forcé, car le modèle reconnaît son incertitude lorsque son niveau de confiance est insuffisant. Il évite ainsi de donner une classification potentiellement erronée et demande une vérification humaine pour garantir une décision plus fiable.
 
 ![T31 : je ne sais pas](captures/tp5-t31-abstention.png)
 
@@ -1230,14 +1247,16 @@ Analysez trois espaces. Arrêtez ensuite l'API (`Ctrl+C` dans son terminal), rec
 **Obtenu** :
 
 ```text
-À compléter
+Texte refusé
+
+API injoignable : lancez d'abord uvicorn api.main:app
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (quelle réponse de l'API se cache derrière chaque message ?) :
 
-> À compléter.
+> Le message « Texte refusé » correspond à une réponse de l'API indiquant que le texte soumis a été rejeté, généralement en raison d'une validation ou d'une règle de sécurité. Le message « API injoignable » apparaît lorsque l'application ne parvient pas à contacter le serveur API, car celui-ci est arrêté. Il faut alors démarrer le serveur avec la commande uvicorn api.main:app.
 
 ![T32 : texte refusé](captures/tp5-t32-refus.png)
 
@@ -1252,14 +1271,23 @@ Onglet « Un fichier d'avis », fichier `data/avis_exemple.csv`, puis « Téléc
 **Obtenu** :
 
 ```text
-À compléter
+Tableau de six avis affiché.
+
+Résumé :
+{
+    'INDETERMINE': 1,
+    'NEGATIVE': 2,
+    'POSITIVE': 3
+}
+
+Fichier resultats.csv généré et téléchargé.
 ```
 
-- [ ] Conforme
+- [x] Conforme
 
 **Commentaire** (combien d'avis partent vers un humain, et lesquels ?) :
 
-> À compléter.
+> Un seul avis est envoyé vers une vérification humaine : celui classé « INDETERMINE ». Les deux avis négatifs et les trois avis positifs sont classés automatiquement. L'avis indéterminé nécessite une intervention humaine, car le niveau de confiance du modèle est insuffisant pour prendre une décision fiable.
 
 ![T33 : le lot d'avis](captures/tp5-t33-lot.png)
 
