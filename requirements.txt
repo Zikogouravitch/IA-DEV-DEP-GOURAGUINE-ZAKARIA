@@ -14,3 +14,4 @@ dvc==3.55.*
 sentence-transformers==3.2.*
 shap==0.46.*
 python-dotenv==1.0.*
+hypothesis==6.115.*
